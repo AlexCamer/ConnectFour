@@ -4,13 +4,16 @@ import (
 	"errors"
 )
 
+// board dimensions
 const (
 	HEIGHT = 6
 	WIDTH = 7
 )
 
+// 2D array to mimic a connect-four board
 type board [HEIGHT][WIDTH]Colour
 
+// insert a piece into a board; piece falls to lowest open spot
 func insert(b *board, position int, colour Colour) error {
 	if position < 1 || position > WIDTH {
 		return errors.New("invalid position")
@@ -24,6 +27,7 @@ func insert(b *board, position int, colour Colour) error {
 	return errors.New("column full")
 }
 
+// checks a linear sequence of 4 spots on a board
 func checkFour(b *board, y, x, yInc, xInc int, c chan<- Colour) {
 	colour := b[y][x]
 	for i := 1; i < 4; i++ {
@@ -35,6 +39,7 @@ func checkFour(b *board, y, x, yInc, xInc int, c chan<- Colour) {
 	c <- colour
 }
 
+// checks for connect four on a given board
 func connectFour(b *board) Colour {
 	c := make(chan Colour)
 	counter := 0
